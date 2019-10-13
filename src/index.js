@@ -1,30 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import { arrayExpression } from '@babel/types';
 
 class Square extends React.Component {
-  constructor(props){
-    super(props);
-    // state should considered as private to component
-    this.state = {
-      value: null,
-    };
-  }
   render() {
     return (
       <button className="square" 
-              onClick={() => {this.setState({value: 'X'});}}>
-        {this.state.value}
+              onClick={() => {this.props.onClick();}}>
+        {this.props.value}
       </button>
     );
   }
 }
 
 class Board extends React.Component {
-  renderSquare(i) {
-    return <Square value={i}/>;
+  constructor(props){
+    super(props);
+    this.state = {
+      squares: Array(9).fill(null),
+    };
   }
-
+  renderSquare(i) {
+    return <Square  value={this.state.squares[i]}
+                    onClick={()=> this.handClick(i)}/>;
+  }
+  handClick(i){
+    const squares = this.state.squares.slice();
+    squares[i] = 'X';
+    this.setState({squares});
+  }
   render() {
     const status = 'Next player: X';
 
